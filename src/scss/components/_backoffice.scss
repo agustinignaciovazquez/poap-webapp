@@ -451,7 +451,7 @@
     }
 
     &.checkouts,
-    &.deliveries {
+    &.deliveries,  &.websites {
       .new-button {
         text-align: right;
       }
@@ -460,7 +460,7 @@
     &.qr,
     &.templates,
     &.checkouts,
-    &.deliveries {
+    &.deliveries, &.websites {
       &.space-between {
         display: flex;
         justify-content: space-between;
@@ -603,7 +603,7 @@
   &.templates,
   &.addresses,
   &.checkouts,
-  &.deliveries{
+  &.deliveries, &.websites{
     .no-results {
       text-align: center;
       padding: 50px 0;
@@ -1109,7 +1109,7 @@
   }
 }
 
-.delivery-admin-form {
+.website-admin-form, .delivery-admin-form {
   display: flex;
   flex-direction: column;
   h3 {
@@ -1127,7 +1127,7 @@
     }
   }
 
-  .delivery-address-list {
+  .website-claimurl-list, .delivery-address-list {
     margin-top: 50px;
 
     .center {
