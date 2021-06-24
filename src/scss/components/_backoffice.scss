@@ -287,6 +287,24 @@
             top: -55px;
           }
         }
+        .status-icon-websites {
+          right: 10px;
+
+          @media (max-width: $bp-mw) {
+            position: absolute;
+            top: -2px;
+            left: 7%;
+          }
+        }
+      }
+
+      .event-edit-icon-container a{
+        @media (max-width: $bp-mw) {
+          position: absolute;
+          top: -280px;
+          right: 2%;
+        }
+
       }
 
       .logo-image-container {
@@ -657,7 +675,7 @@
   text-overflow: ellipsis;
 }
 
-.price-gas-modal-form {
+.price-gas-modal-form, .claimurl-delete-modal-form{
   text-align: center;
   input {
     text-align: center;
@@ -1152,31 +1170,37 @@
 
     }
   }
+}
+.website-claimurl-list, .delivery-address-list {
+  margin-top: 50px;
 
-  .website-claimurl-list, .delivery-address-list {
-    margin-top: 50px;
+  .center {
+    text-align: center;
+  }
 
-    .center {
-      text-align: center;
+  &-title {
+    font-weight: bold;
+    font-size: 16px;
+  }
+  &-row {
+    padding: 10px 5px;
+    &.even {
+      background: white;
     }
 
-    &-title {
-      font-weight: bold;
-      font-size: 16px;
+    .poap-badge,
+    .status-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 20px;
+      object-fit: cover;
     }
-    &-row {
-      padding: 10px 5px;
-      &.even {
-        background: white;
-      }
 
-      .poap-badge,
-      .status-icon {
-        width: 20px;
-        height: 20px;
-        border-radius: 20px;
-        object-fit: cover;
-      }
+    .edit-icon {
+      position: absolute;
+      right: 10px;
+      cursor: pointer;
+      width: 20px;
     }
   }
 }

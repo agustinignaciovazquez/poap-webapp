@@ -44,9 +44,29 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
     return new Date(`${parts[2]}-${parts[0]}-${parts[1]}`);
   };
 
+  /* Date parser */
+
+  const dateParser = (date: string, time: string, timezone: number) => {
+    if(!(date && time && date.length > 0 && time.length > 0))
+      return {dateTime: undefined, formattedDate: undefined};
+
+    // Evaluate date consistency
+    const dateTime = parse(`${date} ${time}`, 'MM-dd-yyyy HH:mm', new Date());
+
+    // Format date
+    const timezoneSign: string = timezone < 0 ? '-' : '+';
+    const absTimezone = Math.abs(timezone);
+    const timezoneFilled: string = absTimezone < 10 ? `0${absTimezone}` : `${absTimezone}`;
+
+    const _date = format(parse(date, 'MM-dd-yyyy', new Date()), 'dd-MMM-yyyy');
+
+    const formattedDate = `${_date} ${time}:00${timezoneSign}${timezoneFilled}`;
+
+    return {dateTime, formattedDate};
+  }
+
   /* State */
   const [website, setWebsite] = useState<Website | null>(null);
-  const [websiteClaims, setWebsiteClaims] = useState<WebsiteClaimUrl[]>([]);
   const [claimUrlsListError, setClaimUrlsListError] = useState<string>('');
   const [listInput, setListInput] = useState<string>('');
   const [activeWebsite, setActiveWebsite] = useState<boolean>(true);
@@ -65,7 +85,6 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
     };
 
     if (website) {
-
       const _startDateTime = website.from? website.from.split('T') : null;
       const _startDate = _startDateTime? _startDateTime[0].split('-'): null;
       const _endDateTime = website.to? website.to.split('T') : null;
@@ -103,10 +122,8 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
       setWebsite(_website);
       setActiveWebsite(_website.active);
       setActiveCaptcha(_website.captcha);
-      const _claimUrls = await getWebsiteClaimUrls(claimNameParam);
-      setWebsiteClaims(_claimUrls);
     } catch (e) {
-      addToast('Error while fetching delivery', {
+      addToast('Error while fetching website', {
         appearance: 'error',
         autoDismiss: false,
       });
@@ -134,6 +151,7 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
       </div>
     );
   }
+
   //Submit form
   const onSubmit = async (submittedValues: WebsiteFormType, actions: FormikActions<WebsiteFormType>) => {
     try {
@@ -155,11 +173,14 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
         active,
       } = submittedValues;
 
-      // Evaluate date consistency
-      const _startDateTime = parse(`${start_date} ${start_time}`, 'MM-dd-yyyy HH:mm', new Date());
-      const _endDateTime = parse(`${end_date} ${end_time}`, 'MM-dd-yyyy HH:mm', new Date());
+      let parsedStartDate = dateParser(start_date, start_time, timezone);
+      let startDateTime = parsedStartDate.dateTime;
+      let formattedStart = parsedStartDate.formattedDate;
+      let parsedEndDate = dateParser(start_date, start_time, timezone);
+      let endDateTime = parsedEndDate.dateTime;
+      let formattedEnd = parsedEndDate.formattedDate;
 
-      if (isAfter(_startDateTime, _endDateTime)) {
+      if (startDateTime && endDateTime && isAfter(startDateTime, endDateTime)) {
         addToast('Start date & time should be before End date & time', {
           appearance: 'error',
           autoDismiss: true,
@@ -167,17 +188,6 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
         actions.setSubmitting(false);
         return;
       }
-
-      // Format date
-      const timezoneSign: string = timezone < 0 ? '-' : '+';
-      const absTimezone = Math.abs(timezone);
-      const timezoneFilled: string = absTimezone < 10 ? `0${absTimezone}` : `${absTimezone}`;
-
-      const _startDate = format(parse(start_date, 'MM-dd-yyyy', new Date()), 'dd-MMM-yyyy');
-      const _endDate = format(parse(end_date, 'MM-dd-yyyy', new Date()), 'dd-MMM-yyyy');
-
-      const formattedStart = `${_startDate} ${start_time}:00${timezoneSign}${timezoneFilled}`;
-      const formattedEnd = `${_endDate} ${end_time}:00${timezoneSign}${timezoneFilled}`;
 
       // Clean claimUrls
       const claimUrls = [];
@@ -200,8 +210,8 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
             claimUrls,
             formattedStart,
             formattedEnd,
-            captcha,
-            active,
+            activeCaptcha,
+            activeWebsite,
           );
         } else {
           await updateWebsite(
@@ -210,8 +220,8 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
             claimUrls,
             formattedStart,
             formattedEnd,
-            captcha,
-            active,
+            activeCaptcha,
+            activeWebsite,
           );
         }
         history.push(ROUTES.websites.admin.path);
@@ -257,8 +267,8 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
               } : undefined;
 
           return (
-            <Form className={'delivery-admin-form'}>
-              <h2>{isEdition ? 'Edit' : 'Create'} Website</h2>
+            <Form className={'website-admin-form'}>
+              <h2>{isEdition ? 'Edit Website' : 'Create Website'} </h2>
 
               <div>
                 <h3>General Info</h3>
@@ -307,25 +317,22 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
                 </div>
             </div>
 
-
-
-            {!isEdition && (
-              <div>
-                <h3>Claim Urls List</h3>
-                <div className={'col-xs-12'}>
-                  <div className="bk-form-row">
-                    <label>List of Claim Urls for the Website</label>
-                    <textarea
-                      placeholder={``}
-                      className={`${claimUrlsListError ? 'error' : ''}`}
-                      value={listInput}
-                      onChange={handleListChange}
-                    />
-                    {claimUrlsListError && <p className={'bk-error'}>{claimUrlsListError}</p>}
-                  </div>
+            <div>
+              <h3>Claim Urls List</h3>
+              <div className={'col-xs-12'}>
+                <div className="bk-form-row">
+                  {!isEdition? <label>List of Claim Urls for the Website</label> : <label>Add Claim Urls to the website</label>}
+                  <textarea
+                    placeholder={``}
+                    className={`${claimUrlsListError ? 'error' : ''}`}
+                    value={listInput}
+                    onChange={handleListChange}
+                  />
+                  {claimUrlsListError && <p className={'bk-error'}>{claimUrlsListError}</p>}
                 </div>
               </div>
-            )}
+            </div>
+
             <div>
 
               <div className={'col-xs-8'}>
@@ -337,7 +344,7 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
 
               <div className={'col-xs-4'}>
                 <div className={'checkbox-field'} onClick={toggleActiveCaptcha}>
-                  <input type="checkbox" checked={activeCaptcha} readOnly  name="captcha" />
+                  <input type="checkbox" checked={activeCaptcha} readOnly name="captcha" />
                   <label>Captcha Activated</label>
                 </div>
               </div>
@@ -346,11 +353,11 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
               <div className={'col-md-12'}>
                 <SubmitButton text="Submit" isSubmitting={isSubmitting} canSubmit={true} />
               </div>
-              {isEdition && websiteClaims && <WebsitesClaimUrlList websiteClaims={websiteClaims} />}
             </Form>
           );
         }}
       </Formik>
+      {isEdition && <WebsitesClaimUrlList claimName={claimNameParam} />}
     </div>
   );
 };

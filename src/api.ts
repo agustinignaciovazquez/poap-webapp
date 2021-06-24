@@ -1041,3 +1041,15 @@ export async function updateWebsite(
 
   return updatedWebsite;
 }
+
+export async function deleteClaimUrl(
+  claimUrl: string,
+): Promise<Website> {
+  return secureFetch(`${API_WEBSITES}/admin/delivery/`, {
+    method: 'DELETE',
+    body: JSON.stringify({
+      claimUrl: claimUrl,
+    }),
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
