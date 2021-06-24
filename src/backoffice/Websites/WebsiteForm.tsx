@@ -33,8 +33,8 @@ type WebsiteFormType = {
 };
 
 const WebsiteForm: FC<RouteComponentProps> = (props) => {
-  const claimName = delve(props, 'match.params.claimName');
-  const isEdition: boolean = !!claimName;
+  const claimNameParam = delve(props, 'match.params.claimName');
+  const isEdition: boolean = !!claimNameParam;
 
   /* Date picker */
   const day = 60 * 60 * 24 * 1000;
@@ -99,11 +99,11 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
   /* Data functions */
   const fetchWebsite = async () => {
     try {
-      const _website = await getWebsite(claimName);
+      const _website = await getWebsite(claimNameParam);
       setWebsite(_website);
       setActiveWebsite(_website.active);
       setActiveCaptcha(_website.captcha);
-      const _claimUrls = await getWebsiteClaimUrls(claimName);
+      const _claimUrls = await getWebsiteClaimUrls(claimNameParam);
       setWebsiteClaims(_claimUrls);
     } catch (e) {
       addToast('Error while fetching delivery', {
@@ -205,6 +205,7 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
           );
         } else {
           await updateWebsite(
+            claimNameParam,
             claimName,
             claimUrls,
             formattedStart,
@@ -215,7 +216,8 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
         }
         history.push(ROUTES.websites.admin.path);
       } catch (e) {
-        let _msg: React.ReactNode | string = e.response.data && e.response.data.message;
+        console.log(e);
+        let _msg: React.ReactNode | string = e.message;
         addToast(_msg, {
           appearance: 'error',
           autoDismiss: false,

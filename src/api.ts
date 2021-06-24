@@ -993,7 +993,11 @@ export async function createWebsite(
     }),
     headers: { 'Content-Type': 'application/json' },
   });
-  const addDeliveries: WebsiteClaimUrl[] = await addURLsToWebsite(claimName, claimUrls);
+
+  let addDeliveries: WebsiteClaimUrl[];
+  if(claimUrls && claimUrls.length > 0)
+    addDeliveries = await addURLsToWebsite(claimName, claimUrls);
+
   return createClaimName;
 }
 
@@ -1011,6 +1015,7 @@ function addURLsToWebsite(
 }
 
 export async function updateWebsite(
+  prevClaimName: string,
   claimName: string,
   claimUrls: string[],
   from?: string,
@@ -1018,7 +1023,7 @@ export async function updateWebsite(
   captcha?: boolean,
   active?: boolean,
 ): Promise<Website> {
-  const updatedWebsite: Website = await secureFetch(`${API_WEBSITES}/admin/claimName`, {
+  const updatedWebsite: Website = await secureFetch(`${API_WEBSITES}/admin/claimName/${prevClaimName}`, {
     method: 'PUT',
     body: JSON.stringify({
       claimName,
@@ -1029,6 +1034,10 @@ export async function updateWebsite(
     }),
     headers: { 'Content-Type': 'application/json' },
   });
-  const addDeliveries: WebsiteClaimUrl[] = await addURLsToWebsite(claimName, claimUrls);
+
+  let addDeliveries: WebsiteClaimUrl[];
+  if(claimUrls && claimUrls.length > 0)
+    addDeliveries = await addURLsToWebsite(claimName, claimUrls);
+
   return updatedWebsite;
 }

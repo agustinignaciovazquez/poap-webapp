@@ -79,11 +79,11 @@ const WebsitesList = () => {
 
   const tableHeaders = (
     <div className={'row table-header visible-md'}>
-      <div className={'col-md-2'}>ClaimName</div>
-      <div className={'col-md-6'}>Total / Claimed</div>
-      <div className={'col-md-1 center'}>Captcha</div>
-      <div className={'col-md-1 center'}>Active</div>
-      <div className={'col-md-1'} />
+      <div className={'col-md-4 col-xs-3'}>ClaimName</div>
+      <div className={'col-xs-2'}>Total / Claimed</div>
+      <div className={'col-md-2 col-xs-3 center'}>Captcha</div>
+      <div className={'col-md-2 col-xs-3 center'}>Active</div>
+      <div className={'col-md-1 col-xs-1'} />
     </div>
   );
 
@@ -137,15 +137,15 @@ const WebsitesList = () => {
             {websites.map((website, i) => {
               return (
                 <div className={`row ${i % 2 === 0 ? 'even' : 'odd'}`} key={website.claimName}>
-                  <div className={'col-md-2 col-xs-12 ellipsis'}>
+                  <div className={'col-md-4 col-xs-3 ellipsis'}>
                     {website.claimName}
                   </div>
 
-                  <div className={'col-md-6 col-xs-12 ellipsis'}>
+                  <div className={'col-xs-2 ellipsis'}>
                     {website.deliveriesCount?.total + '/' + website.deliveriesCount?.claimed}
                   </div>
 
-                  <div className={'col-md-1 col-xs-6 center status'}>
+                  <div className={'col-md-2 col-xs-3 center status'}>
 
                     <img
                       src={website.captcha ? checked : error}
@@ -154,17 +154,17 @@ const WebsitesList = () => {
                     />
                   </div>
 
-                  <div className={'col-md-1 col-xs-6 center status'}>
+                  <div className={'col-md-2 col-xs-3 center status'}>
 
                     <img
-                      src={website.captcha ? checked : error}
-                      alt={website.captcha ? 'Active' : 'Inactive'}
+                      src={website.active ? checked : error}
+                      alt={website.active ? 'Active' : 'Inactive'}
                       className={'status-icon'}
                     />
                   </div>
 
-                  <div className={'col-md-1 center event-edit-icon-container'}>
-                    <Link to={`/admin/websites/${website.claimName}`}>
+                  <div className={'col-md-2 center event-edit-icon-container'}>
+                    <Link to={`/admin/websites/edit/${website.claimName}`}>
                       <EditIcon />
                     </Link>
                   </div>

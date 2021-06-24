@@ -176,7 +176,7 @@ const ROUTES = {
       title: 'New Website',
     },
     editForm: {
-      path: '/admin/websites/:claimName',
+      path: '/admin/websites/edit/:claimName',
       roles: [ROLES.administrator],
       title: 'Edit Website',
     },
