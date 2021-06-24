@@ -89,7 +89,7 @@ const WebsitesList = () => {
 
   return (
     <div className={'admin-table websites'}>
-      <h2>Deliveries</h2>
+      <h2>Websites</h2>
       <div className="filters-container websites">
         <div className={'filter col-md-4 col-xs-12'}>
           <div className="filter-option">

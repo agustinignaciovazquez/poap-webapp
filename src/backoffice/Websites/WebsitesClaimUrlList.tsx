@@ -6,6 +6,8 @@ import error from '../../images/error.svg';
 
 /* Types */
 import { WebsiteClaimUrl } from '../../api';
+import { Link } from 'react-router-dom';
+import { ReactComponent as RemoveIcon } from '../../images/close.svg';
 
 type AddressesListProps = {
   websiteClaims: WebsiteClaimUrl[];
@@ -21,7 +23,8 @@ const WebsitesClaimUrlList: FC<AddressesListProps> = (props) => {
     <div className={'col-xs-2'}>Created</div>
     <div className={'col-xs-2'}>IP</div>
     <div className={'col-xs-2'}>Claimed Time</div>
-    <div className={'col-xs-2 center'}>Claimed</div>
+    <div className={'col-xs-1 center'}>Claimed</div>
+    <div className={'col-xs-1 center'}></div>
     </div>
   {websiteClaims.map((websiteClaim, i) => {
     return (
@@ -40,13 +43,21 @@ const WebsitesClaimUrlList: FC<AddressesListProps> = (props) => {
       <div className={'col-xs-2'}>
         {websiteClaim.claimedTime || "Not claimed"}
       </div>
-      <div className={'col-xs-2 center'}>
+      <div className={'col-xs-1 center'}>
         <img
           src={websiteClaim.claimed ? checked : error}
           alt={websiteClaim.claimed ? 'Claimed' : 'Pending'}
           className={'status-icon'}
         />
       </div>
+      {!websiteClaim.claimed  &&
+      <div className={'col-md-1 center event-edit-icon-container'}>
+        <Link to={`/admin/websites/${websiteClaim.claimName}`}>
+          <RemoveIcon />
+        </Link>
+      </div>
+      }
+
     </div>
   );
   })}

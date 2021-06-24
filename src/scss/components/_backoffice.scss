@@ -1083,7 +1083,7 @@
   }
 
   .date-row {
-    .col-md-4 {
+    .col-md-4, .col-xs-6 {
       display: flex;
       flex-direction: row;
       padding-right: 15px;
@@ -1124,6 +1124,32 @@
 
     &:not(:first-of-type) {
       padding-left: 10px;
+    }
+  }
+
+  .date-row {
+    .col-md-4, .col-xs-4 {
+      display: flex;
+      flex-direction: row;
+      padding-right: 15px;
+
+      @media (max-width: $bp-mw) {
+        padding-right: 1px;
+      }
+
+      .bk-form-row {
+        margin: 10px 5px;
+      }
+
+      &:last-of-type {
+        padding-right: 0;
+        flex-direction: column;
+
+        label {
+          margin: 0 0 10px;
+        }
+      }
+
     }
   }
 
