@@ -994,9 +994,8 @@ export async function createWebsite(
     headers: { 'Content-Type': 'application/json' },
   });
 
-  let addDeliveries: WebsiteClaimUrl[];
   if(claimUrls && claimUrls.length > 0)
-    addDeliveries = await addURLsToWebsite(claimName, claimUrls);
+    await addURLsToWebsite(claimName, claimUrls);
 
   return createClaimName;
 }
@@ -1034,10 +1033,9 @@ export async function updateWebsite(
     }),
     headers: { 'Content-Type': 'application/json' },
   });
-
-  let addDeliveries: WebsiteClaimUrl[];
+  
   if(claimUrls && claimUrls.length > 0)
-    addDeliveries = await addURLsToWebsite(claimName, claimUrls);
+    await addURLsToWebsite(claimName, claimUrls);
 
   return updatedWebsite;
 }
