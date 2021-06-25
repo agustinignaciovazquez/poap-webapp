@@ -5,7 +5,7 @@ import checked from '../../images/checked.svg';
 import error from '../../images/error.svg';
 
 /* Types */
-import { AdminAddress, deleteClaimUrl, getWebsite, getWebsiteClaimUrls, setSigner, WebsiteClaimUrl } from '../../api';
+import { deleteClaimUrl, getWebsiteClaimUrls, WebsiteClaimUrl } from '../../api';
 import { ErrorMessage, Field, FieldProps, Form, Formik, FormikActions } from 'formik';
 import classNames from 'classnames';
 import { SubmitButton } from '../../components/SubmitButton';
