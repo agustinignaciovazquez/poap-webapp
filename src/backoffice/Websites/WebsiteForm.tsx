@@ -176,7 +176,7 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
       let parsedStartDate = dateParser(start_date, start_time, timezone);
       let startDateTime = parsedStartDate.dateTime;
       let formattedStart = parsedStartDate.formattedDate;
-      let parsedEndDate = dateParser(start_date, start_time, timezone);
+      let parsedEndDate = dateParser(end_date, end_time, timezone);
       let endDateTime = parsedEndDate.dateTime;
       let formattedEnd = parsedEndDate.formattedDate;
 
