@@ -7,7 +7,7 @@ import delve from 'dlv';
 /* Helpers */
 import { ROUTES } from 'lib/constants';
 import { WebsiteSchema } from '../../lib/schemas';
-import { Website, getWebsite, getWebsiteClaimUrls, WebsiteClaimUrl, createWebsite, updateWebsite,
+import { Website, getWebsite, createWebsite, updateWebsite,
 } from '../../api';
 
 /* Components */
@@ -169,8 +169,6 @@ const WebsiteForm: FC<RouteComponentProps> = (props) => {
         end_date,
         end_time,
         timezone,
-        captcha,
-        active,
       } = submittedValues;
 
       let parsedStartDate = dateParser(start_date, start_time, timezone);

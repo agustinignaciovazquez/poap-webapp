@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { OptionTypeBase } from 'react-select';
 import { useToasts } from 'react-toast-notifications';
 
 /* Helpers */
@@ -10,7 +9,6 @@ import { ROUTES } from '../../lib/constants';
 /* Components */
 import { Loading } from '../../components/Loading';
 import FilterButton from '../../components/FilterButton';
-import FilterReactSelect from '../../components/FilterReactSelect';
 import FilterSelect from '../../components/FilterSelect';
 import ReactPaginate from 'react-paginate';
 
