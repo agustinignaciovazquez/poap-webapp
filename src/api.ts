@@ -18,6 +18,7 @@ export interface TokenInfo {
   event: PoapEvent;
   ownerText?: string;
   layer: string;
+  ens?: any
 }
 
 export type QrCodesListAssignResponse = {
@@ -40,6 +41,7 @@ export interface PoapEvent {
   year: number;
   start_date: string;
   end_date: string;
+  expiry_date: string;
   virtual_event: boolean;
 }
 export interface PoapFullEvent extends PoapEvent {
@@ -263,11 +265,13 @@ export enum QueueStatus {
   pending = 'PENDING',
 }
 
-const API_BASE =  process.env.NODE_ENV === 'development'
-  ? `${process.env.REACT_APP_TEST_API_ROOT}`
-  : `${process.env.REACT_APP_API_ROOT}`;
+const API_BASE =
+  process.env.NODE_ENV === 'development'
+    ? `${process.env.REACT_APP_TEST_API_ROOT}`
+    : `${process.env.REACT_APP_API_ROOT}`;
 
-const API_WEBSITES = process.env.NODE_ENV === 'development'
+const API_WEBSITES =
+  process.env.NODE_ENV === 'development'
   ? `${process.env.REACT_APP_TEST_API_WEBSITES}`
   : `${process.env.REACT_APP_API_WEBSITES}`;
 
@@ -918,7 +922,6 @@ export function updateDelivery(
     headers: { 'Content-Type': 'application/json' },
   });
 }
-
 /* Websites */
 export type Website = {
   claimName: string;
@@ -950,11 +953,16 @@ export function getWebsites(
   limit: number,
   offset: number,
   active: boolean | null,
+  timeframe: string | null,
 ): Promise<PaginatedWebsites> {
   let paramsObject: any = { limit, offset };
 
   if (active !== null) {
     paramsObject['active'] = active;
+  }
+
+  if(timeframe !== null){
+    paramsObject['timeframe'] = timeframe;
   }
 
   const params = queryString.stringify(paramsObject);
@@ -1033,7 +1041,7 @@ export async function updateWebsite(
     }),
     headers: { 'Content-Type': 'application/json' },
   });
-  
+
   if(claimUrls && claimUrls.length > 0)
     await addURLsToWebsite(claimName, claimUrls);
 

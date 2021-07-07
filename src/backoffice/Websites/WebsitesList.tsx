@@ -16,6 +16,7 @@ import ReactPaginate from 'react-paginate';
 import { ReactComponent as EditIcon } from '../../images/edit.svg';
 import checked from '../../images/checked.svg';
 import error from '../../images/error.svg';
+import { format } from 'date-fns';
 
 /* Types */
 type PaginateAction = {
@@ -28,6 +29,7 @@ const WebsitesList = () => {
   const [total, setTotal] = useState<number>(0);
   const [limit, setLimit] = useState<number>(10);
   const [activeStatus, setActiveStatus] = useState<boolean | null>(null);
+  const [timeframe, setTimeframe] = useState<string | null>(null);
   const [websites, setWebsites] = useState<Website[]>([]);
   const [isFetching, setIsFetching] = useState<null | boolean>(null);
 
@@ -40,13 +42,13 @@ const WebsitesList = () => {
   useEffect(() => {
     setPage(0);
     fetchWebsites();
-  }, [activeStatus, limit]); /* eslint-disable-line react-hooks/exhaustive-deps */
+  }, [activeStatus,timeframe, limit]); /* eslint-disable-line react-hooks/exhaustive-deps */
 
   /* Data functions */
   const fetchWebsites = async () => {
     setIsFetching(true);
     try {
-      const response = await getWebsites(limit, page * limit, activeStatus);
+      const response = await getWebsites(limit, page * limit, activeStatus, timeframe);
       if (response) {
         setWebsites(response.websites);
         setTotal(response.total);
@@ -73,14 +75,22 @@ const WebsitesList = () => {
     setActiveStatus(finalValue);
   };
 
+  const handleTimeframe = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
+    const { value } = e.target;
+    let finalValue = value === '' ? null : value;
+    setTimeframe(finalValue);
+  };
+
   const handlePageChange = (obj: PaginateAction) => setPage(obj.selected);
 
   const tableHeaders = (
     <div className={'row table-header visible-md'}>
-      <div className={'col-md-4 col-xs-3'}>ClaimName</div>
-      <div className={'col-xs-2'}>Total / Claimed</div>
-      <div className={'col-md-2 visible-md center'}>Captcha</div>
-      <div className={'col-md-2 col-xs-3 center'}>Active</div>
+      <div className={'col-md-4 col-xs-3 '}>ClaimName</div>
+      <div className={'col-md-2 col-xs-2 '}>Start Date</div>
+      <div className={'col-md-2 col-xs-2 '}>End Date</div>
+      <div className={'col-md-1 col-xs-2 '}>Claim/Total</div>
+      <div className={'col-md-1 col-xs-1 visible-md center'}>Captcha</div>
+      <div className={'col-md-1 col-xs-1 center'}>Active</div>
       <div className={'col-md-1 col-xs-1'} />
     </div>
   );
@@ -90,7 +100,13 @@ const WebsitesList = () => {
       <h2>Websites</h2>
       <div className="filters-container websites">
         <div className={'filter col-md-4 col-xs-12'}>
-          <div className="filter-option">
+          <div className={'filter-group'}>
+            <FilterSelect handleChange={handleTimeframe}>
+              <option value="">Filter by Time Frame</option>
+              <option value="future">Future Events</option>
+              <option value="present">Present Events</option>
+              <option value="past">Past Events</option>
+            </FilterSelect>
           </div>
         </div>
         <div className={'filter col-md-3 col-xs-6'}>
@@ -140,12 +156,22 @@ const WebsitesList = () => {
                     {website.claimName}
                   </div>
 
-                  <div className={'col-xs-2 col-xs-12 ellipsis'}>
-                    <span className={'visible-sm'}>Total / Count: </span>
-                    {website.deliveriesCount?.total + '/' + website.deliveriesCount?.claimed}
+                  <div className={'col-md-2 col-xs-12 ellipsis'}>
+                    <span className={'visible-sm'}>Start Date: </span>
+                    {website.from? format(new Date(website.from), 'MM-dd-yyyy HH:MM') : '-'}
                   </div>
 
-                  <div className={'col-md-2 visible-md center status'}>
+                  <div className={'col-md-2 col-xs-12 ellipsis'}>
+                    <span className={'visible-sm'}>End Date: </span>
+                    {website.to? format(new Date(website.to), 'MM-dd-yyyy HH:MM') : '-'}
+                  </div>
+
+                  <div className={'col-md-1 col-xs-12 ellipsis center'}>
+                    <span className={'visible-sm'}>Claimed / Total: </span>
+                    {website.deliveriesCount?.claimed + '/' + website.deliveriesCount?.total}
+                  </div>
+
+                  <div className={'col-md-1 visible-md center status'}>
                     <span className={'visible-sm'}>Captcha: </span>
                     <img
                       src={website.captcha ? checked : error}
@@ -154,7 +180,7 @@ const WebsitesList = () => {
                     />
                   </div>
 
-                  <div className={'col-md-2 col-xs-12 center status'}>
+                  <div className={'col-md-1 col-xs-12 center status'}>
                     <span className={'visible-sm'}>Active: </span>
                     <img
                       src={website.active ? checked : error}
@@ -163,7 +189,7 @@ const WebsitesList = () => {
                     />
                   </div>
 
-                  <div className={'col-md-2 col-xs-1 center event-edit-icon-container'}>
+                  <div className={'col-md-1 col-xs-1 center event-edit-icon-container'}>
                     <Link to={`/admin/websites/edit/${website.claimName}`}>
                       <EditIcon />
                     </Link>

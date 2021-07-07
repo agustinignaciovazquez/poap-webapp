@@ -245,8 +245,16 @@
         margin-bottom: 20px;
         max-width: none;
 
+        &.ens {
+          @include x-rem(font-size, 22px);
+        }
+
         @media (min-width: $bp-m) {
           @include x-rem(font-size, 19px);
+
+          &.ens {
+            @include x-rem(font-size, 24px);
+          }
         }
       }
 
@@ -491,6 +499,7 @@
       }
 
       img {
+        margin-bottom: -5px;
         width: 100%;
       }
     }
@@ -498,6 +507,8 @@
 
   .claim-body {
     padding-top: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
     flex: 1;
 
     @media (min-width: $bp-mw) {
@@ -584,7 +595,7 @@
         color: $color-primary;
         font-size: 26px;
         line-height: 30px;
-        max-width: 300px;
+        min-width: 300px;
         margin: 30px auto;
       }
 
@@ -592,7 +603,7 @@
         color: $color-medium-violet;
         font-size: 16px;
         line-height: 20px;
-        max-width: 300px;
+        min-width: 300px;
         margin: 40px auto;
       }
 
@@ -809,6 +820,10 @@
   .title-container {
     flex: 1;
 
+    @media (max-width: $bp-m) {
+      text-align: center;
+    }
+
     img {
       border-radius: 4px;
       height: 40px;
@@ -821,6 +836,9 @@
   .header-link-container {
     a {
       font-size: 24px;
+    }
+    @media (max-width: $bp-m) {
+      display: none;
     }
   }
 }

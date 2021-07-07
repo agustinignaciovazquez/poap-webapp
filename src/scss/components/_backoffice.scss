@@ -287,24 +287,6 @@
             top: -55px;
           }
         }
-        .status-icon-websites {
-          right: 10px;
-
-          @media (max-width: $bp-mw) {
-            position: absolute;
-            top: -2px;
-            left: 7%;
-          }
-        }
-      }
-
-      .event-edit-icon-container a{
-        @media (max-width: $bp-mw) {
-          position: absolute;
-          top: -280px;
-          right: 2%;
-        }
-
       }
 
       .logo-image-container {
@@ -469,7 +451,7 @@
     }
 
     &.checkouts,
-    &.deliveries,  &.websites {
+    &.deliveries, &.websites {
       .new-button {
         text-align: right;
       }
@@ -675,7 +657,7 @@
   text-overflow: ellipsis;
 }
 
-.price-gas-modal-form, .claimurl-delete-modal-form{
+.price-gas-modal-form {
   text-align: center;
   input {
     text-align: center;
@@ -1101,7 +1083,7 @@
   }
 
   .date-row {
-    .col-md-4, .col-xs-6 {
+    .col-md-4 {
       display: flex;
       flex-direction: row;
       padding-right: 15px;
@@ -1171,6 +1153,7 @@
     }
   }
 }
+
 .website-claimurl-list, .delivery-address-list {
   margin-top: 50px;
 
@@ -1204,3 +1187,4 @@
     }
   }
 }
+

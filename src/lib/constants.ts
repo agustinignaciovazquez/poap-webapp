@@ -40,6 +40,7 @@ const ROUTES = {
   scan: '/scan/:account',
   scanHome: '/scan',
   redeem: '/redeem/:uid',
+  renderToken: '/r/token/:tokenId',
   token: '/token/:tokenId',
   callback: '/callback',
   codeClaimWeb3PageHash: '/claim/:hash/:method',
@@ -179,8 +180,9 @@ const ROUTES = {
       path: '/admin/websites/edit/:claimName',
       roles: [ROLES.administrator],
       title: 'Edit Website',
-    },
+    }
   },
+
 };
 
 const IMAGE_SUPPORTED_FORMATS = ['image/png'];
